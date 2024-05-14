@@ -1,0 +1,212 @@
+<!-- * Mô tả bài 2: Quản lý kho hàng																						
+	1. Viết mã JavaScript để tạo cấu trúc dữ liệu cho sản phẩm, kho hàng và giao dịch nhập xuất kho:																					
+																						
+																					
+																						
+																				
+																						
+																			
+																						
+																			
+	3. Sử dụng localStorage để làm database local.																					
+																						
+	4. Gọi các hàm để thực hiện quản lý kho.																					
+		- Hiển thị danh sách sản phẩm lên console.																				
+		- Hiển thị danh sách kho hàng lên console.																				
+		- Hiển thị danh sách giao dịch nhập xuất kho lên console.																				
+		- Thêm sản phẩm mới vào kho.																				
+		- Cập nhật số lượng tồn kho của sản phẩm.																				
+		- Thực hiện giao dịch nhập kho.																				
+		- Thực hiện giao dịch xuất kho.																				
+		- Tìm kiếm sản phẩm theo tên.																				
+ -->
+ <h1>OK</h1>
+ <script>
+
+//khai báo sản phẩm
+// Sản phẩm: (Product)																					
+// 		- id: Mã sản phẩm (int)																				
+// 		- name: Tên sản phẩm (string)																				
+// 		- unit: Đơn vị tính (string)																				
+// 		- price: Giá bán (float)
+
+const productDatas = [
+    { id: 1, name: 'Tivi', unit: 'Cai', price: 30000 },
+    { id: 2, name: 'Tu lanh', unit: 'Cai', price: 70000 },
+    { id: 3, name: 'May giat', unit: 'Cai', price: 40000 }
+];
+
+localStorage.setItem('products', JSON.stringify(productDatas));
+
+const products = JSON.parse(localStorage.getItem('products'));
+
+// Kho hàng: (Stock)																					
+// 		- productId: Mã sản phẩm (int)																				
+// 		- quantity: Số lượng tồn kho (int)	
+
+const stockDatas = [
+    { productId: 1, quantity: 100 },
+    { productId: 2, quantity: 150 },
+    { productId: 3, quantity: 140 }
+];
+
+localStorage.setItem('stocks', JSON.stringify(stockDatas));
+const stocks = JSON.parse(localStorage.getItem('stocks'));
+
+// Giao dịch: (Transaction)																					
+// 		- id: Mã giao dịch (int)																				
+// 		- type: Loại giao dịch ("nhập kho: 0", "xuất kho: 1")																				
+// 		- productId: Mã sản phẩm (int)																				
+// 		- quantity: Số lượng giao dịch (int)																				
+// 		- date: Ngày giao dịch (ngaỳ-tháng-năm - string)		
+
+const transactionDatas = [
+    { id: 1, type: 0, productID: 1, quantity: 12, date: '08-05-2024' },
+    { id: 2, type: 0, productID: 1, quantity: 30, date: '09-05-2024' },
+    { id: 3, type: 1, productID: 2, quantity: 10, date: '09-05-2024' },
+    { id: 4, type: 1, productID: 3, quantity: 13, date: '10-05-2024' },
+    { id: 5, type: 0, productID: 2, quantity: 19, date: '09-05-2024' }
+];
+localStorage.setItem('transactions', JSON.stringify(transactionDatas));
+const transactions = JSON.parse(localStorage.getItem('transactions'));
+
+// 2. Tạo các hàm để thực hiện các chức năng:													Phần MAIN								
+		// - getAllProducts(): Lấy danh sách tất cả sản phẩm.																				
+		// - getProductById(id): Lấy thông tin sản phẩm theo mã sản phẩm.																				
+		// - getAllStocks(): Lấy danh sách tất cả kho hàng.																				
+		// - getStockByProductId(productId): Lấy số lượng tồn kho của sản phẩm theo mã sản phẩm.																				
+		// - addStock(stock): Thêm sản phẩm vào kho.																				
+		// - updateStock(stock): Cập nhật số lượng tồn kho của sản phẩm.																				
+		// - addTransaction(transaction): Thêm giao dịch nhập xuất kho.																				
+		// - getAllTransactions(): Lấy danh sách tất cả giao dịch nhập xuất kho.																				
+		// - getTransactionsByProductId(productId): Lấy danh sách giao dịch nhập xuất kho của sản phẩm theo mã sản phẩm.																				
+				
+// 1. getAllProducts(): Lấy danh sách tất cả sản phẩm.	
+
+function getAllProducts() {
+    return products;
+}
+// console.log(getAllProducts);
+
+// 2. getProductById(id): Lấy thông tin sản phẩm theo mã sản phẩm.							
+
+function getProductById(id) {
+    let result = products.find(product => product.id === id);
+    if(!result) return "Khong tim thay";
+    return result;
+
+}
+
+// console.log(getProductById(0));
+
+// 3. getAllStocks(): Lấy danh sách tất cả kho hàng.																				
+
+function getAllStocks() {
+    //cách 1
+    // let tmp = [];
+    // for (let product of products) {
+    //     for (let stock of stocks) {
+    //         if(product.id === stock.productId) tmp.push({name: product.name, quantity: stock.quantity});
+    //     }
+    // }
+    // return tmp;
+
+    let tmp = {};
+    let result = [];
+    for (let product of products) {
+        tmp[product.id] = product;
+    }
+
+    for (let stock of stocks) {
+        result.push({name: tmp[stock.productId].name, quantity: stock.quantity});
+    }
+    return result;
+}
+
+// console.log(getAllStocks());
+
+// 4. getStockByProductId(productId) Lấy ra số lượng tồn kho theo mã
+
+function getStockByProductId(productId) {
+    return stocks.filter(stock => stock.productId === productId);
+}
+
+// console.log(getStockByProductId(1));
+
+// 5. addStock(stock): Thêm sản phẩm vào kho.
+
+function addStock(stock) {
+    //valify
+    if(!stock) return false;
+    //kiểm tra sản phẩm muốn thêm vào kho có tồn tại k
+    let productIndex = products.findIndex(product => product.id === stock.productId);
+    if (productIndex === -1) return false;
+    //kiem tra san pham can them da co trong kho chua.
+    // Neu chua thi them moi. Neu roi thi cong don
+    let stockIndex = stocks.findIndex(s => s.productId === stock.productId);
+    if (stockIndex === -1 ) {
+        stocks.push(stock);
+        return true;
+    }
+    //cộng kho
+    stocks[stockIndex].quantity = stocks[stockIndex].quantity + stock.quantity;
+    return true;
+}
+
+console.log('Kho chua them:', stocks);
+if(addStock({productId: 2, quantity: 20})) {
+    console.log('them moi thanh cong', stocks);
+} else {
+    console.log("them moi that bai");
+}
+
+// 6. updateStock(stock): Cập nhật số lượng tồn kho của sản phẩm.	
+
+function addTransaction(transaction) {
+    let stockIndex = stocks.findIndex(stock => stock.productId == transaction.productID);
+    let productIndex = products.findIndex(product => product.id == transaction.productID);
+    //kiểm tra sản phẩm có tồn tại không
+    if(productIndex < 0) {
+        console.log('San pham khong ton tai');
+        return;
+    }
+    //0 nhap kho
+    //Nếu nhập kho thì số lượng trong stock + => thêm vào transactions và cập nhât kho
+    if (transaction.type == 0) {
+        transactions.push(transaction);
+        stocks[stockIndex].quantity = stocks[stockIndex].quantity + transaction.quantity;
+    } 
+    //Nếu trừ kho và số lượng trong kho >= số lượng muốn trừ => thêm vào transaction và cập nhật kho
+    else if (transaction.type == 1 && stocks[stockIndex].quantity >= transaction.quantity) {
+        transactions.push(transaction);
+        stocks[stockIndex].quantity = stocks[stockIndex].quantity - transaction.quantity;
+    }
+    //Nếu trừ kho va số lượng trong kho nhỏ hơn số lượng muốn trừ => lỗi
+    else {
+        console.log('San phan khong du de tru kho');
+    }
+    return transactions;
+}
+
+let transaction = {
+    id: 14,
+    type: 0,
+    productID: 34,
+    quantity: 3,
+    date: '24/06/2024'
+};
+// addTransaction(transaction);
+
+function getAllTransactions() {
+    return transactions;
+}
+
+function getTransactionsByProductId(productID) {
+    return transactions.filter(transaction => transaction.productID == productID);
+}
+
+ </script>
+
+
+
+                                                                                    
