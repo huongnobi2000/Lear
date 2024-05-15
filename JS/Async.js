@@ -28,3 +28,25 @@
 // );
 
 
+// Async Syntax
+// async makes a function return a Promise
+// await makes a function wait for a Promise
+
+// function myFuntion() {
+//     return Promise.resolve("Hello");
+// }
+
+async function myFuntion() {
+    return "Hello";
+}
+
+myFuntion().then(
+    function(value) {
+        console.log("OK");
+    },
+    function(err) {
+        console.log("Err");
+    }
+
+);
+
