@@ -1,15 +1,6 @@
 <!-- * Mô tả bài 2: Quản lý kho hàng																						
 	1. Viết mã JavaScript để tạo cấu trúc dữ liệu cho sản phẩm, kho hàng và giao dịch nhập xuất kho:																					
-																						
-																					
-																						
-																				
-																						
-																			
-																						
-																			
 	3. Sử dụng localStorage để làm database local.																					
-																						
 	4. Gọi các hàm để thực hiện quản lý kho.																					
 		- Hiển thị danh sách sản phẩm lên console.																				
 		- Hiển thị danh sách kho hàng lên console.																				
@@ -88,7 +79,8 @@ function getAllProducts() {
 }
 // console.log(getAllProducts);
 
-// 2. getProductById(id): Lấy thông tin sản phẩm theo mã sản phẩm.							
+// 2. getProductById(id): Lấy thông tin sản phẩm theo mã sản phẩm.	
+// - Sử dụng method find kiểm tra có tồn tại productId trong mảng products k ?
 
 function getProductById(id) {
     let result = products.find(product => product.id === id);
@@ -136,7 +128,7 @@ function getStockByProductId(productId) {
 // 5. addStock(stock): Thêm sản phẩm vào kho.
 
 function addStock(stock) {
-    //valify
+    //varify stock
     if(!stock) return false;
     //kiểm tra sản phẩm muốn thêm vào kho có tồn tại k
     let productIndex = products.findIndex(product => product.id === stock.productId);
